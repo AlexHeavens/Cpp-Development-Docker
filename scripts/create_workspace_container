@@ -6,11 +6,12 @@ if [ "${TAG}" == "" ]; then
 fi
 
 host_user_name=`whoami`
-container_home="/home/${host_user_name}"
+container_home="/home/user"
 workspace_name="${PWD##*/}"
 docker run \
 	--interactive \
 	--tty \
+	--rm \
 	--network host \
 	--volume "${HOME}/.ssh:${container_home}/.ssh" \
 	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig" \
