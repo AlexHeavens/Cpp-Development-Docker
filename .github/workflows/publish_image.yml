@@ -3,7 +3,7 @@ env:
   REGISTRY: docker.pkg.github.com
   IMAGE_NAME: docker.pkg.github.com/alexheavens/cpp-development-image/release
 
-on: [push, pull_request]
+on: push
 
 jobs:
   publish:

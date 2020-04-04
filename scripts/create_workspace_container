@@ -2,7 +2,7 @@
 
 TAG="${1}"
 if [ "${TAG}" == "" ]; then
-	TAG='docker.pkg.github.com/alexheavens/cpp-development-image:master'
+	TAG='docker.pkg.github.com/alexheavens/cpp-development-image/release:master'
 fi
 
 host_user_name=`whoami`
