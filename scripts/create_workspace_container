@@ -20,4 +20,3 @@ docker run \
 	--env HOST_USER_NAME=${host_user_name} \
     --env HOST_USER_ID=`id --user` \
 	${TAG}
-
