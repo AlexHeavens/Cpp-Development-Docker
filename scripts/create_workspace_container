@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+TAG="${1}"
+if [ "${TAG}" == "" ]; then
+	TAG='docker.pkg.github.com/alexheavens/cpp-development-image:master'
+fi
+
+host_user_name=`whoami`
+container_home="/home/${host_user_name}"
+workspace_name="${PWD##*/}"
+docker run \
+	--interactive \
+	--tty \
+	--network host \
+	--volume "${HOME}/.ssh:${container_home}/.ssh" \
+	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig" \
+	--volume "`readlink -f .`:${container_home}/workspace" \
+	--env DISPLAY="${DISPLAY}" \
+	--name "cpp-development.${workspace_name}" \
+	--env HOST_USER_NAME=${host_user_name} \
+    --env HOST_USER_ID=`id --user` \
+	${TAG}
+
