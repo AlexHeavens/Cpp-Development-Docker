@@ -13,8 +13,9 @@ docker run \
 	--tty \
 	--rm \
 	--network host \
-	--volume "${HOME}/.ssh:${container_home}/.ssh" \
-	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig" \
+	--volume "${HOME}/.ssh:${container_home}/.ssh:ro" \
+	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig:rw" \
+	--volume "${HOME}/.Xauthority:${container_home}/.Xauthority:rw" \
 	--volume "`readlink -f .`:${container_home}/workspace" \
 	--env DISPLAY="${DISPLAY}" \
 	--name "cpp-development.${workspace_name}" \

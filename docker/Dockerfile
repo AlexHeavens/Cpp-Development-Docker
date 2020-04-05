@@ -17,10 +17,9 @@ RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add 
 	apt-get update && \
 	apt-get install code --yes
 
-# Dummy user to allow non-root vscode install
-ADD home_template /home/user
-RUN useradd -u 9999 user && \
-	chown -R user:user /home/user
+# dummy user to allow non-root vscode install
+RUN useradd -u 9999 user
+ADD --chown=user:user home_template /home/user
 
 RUN su user -c 'code --install-extension ms-azuretools.vscode-docker && \
 	code --install-extension ms-vscode.cpptools'
