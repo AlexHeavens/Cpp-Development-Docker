@@ -1,24 +1,69 @@
 #!/usr/bin/env bash
 
-TAG="${1}"
-if [ "${TAG}" == "" ]; then
-	TAG='docker.pkg.github.com/alexheavens/cpp-development-image/release:master'
+default_tag='docker.pkg.github.com/alexheavens/cpp-development-image/release:master'
+tag="${default_tag}"
+detach=false
+host_user_name=`whoami`
+container_home='/home/user'
+workspace_name="${PWD##*/}"
+container_name="cpp-development.${workspace_name}"
+
+invalid_input=false
+print_help=false
+
+while (( "$#" )); do
+  case "${1}" in
+    -t|--tag)
+      tag="${2}"
+      shift 2
+      ;;
+	--name)
+	  container_name="${2}"
+	  shift 2
+	  ;;
+    -d|--detach)
+      detach=true
+	  shift
+      ;;
+    *)
+      printf "Unexpected argument: ${1}\n" >&2
+      print_help=true
+      invalid_input=true
+      break
+      ;;
+  esac
+done
+
+if [ "${tag}" == '' ]; then
+  print_help=true
+  invalid_input=true
 fi
 
-host_user_name=`whoami`
-container_home="/home/user"
-workspace_name="${PWD##*/}"
+if [ "${print_help}" = true ]; then
+  printf 'Usage: ./create_workspace_container [--tag TAG] [--name NAME] [--detach]\n'
+fi
+
+if [ "${invalid_input}" = true ]; then
+  exit 1
+fi
+
+
+interactive_run_args='--rm --tty --interactive'
+
+if [ "${detach}" = true ]; then
+  interactive_run_args="${interactive_run_args} --detach "
+fi
+
 docker run \
-	--interactive \
-	--tty \
-	--rm \
+	${interactive_run_args} \
 	--network host \
 	--volume "${HOME}/.ssh:${container_home}/.ssh:ro" \
-	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig:rw" \
-	--volume "${HOME}/.Xauthority:${container_home}/.Xauthority:rw" \
+	--volume "${HOME}/.gitconfig:${container_home}/.gitconfig:ro" \
+	--volume "${HOME}/.Xauthority:${container_home}/.Xauthority:ro" \
+	--volume "/var/run/docker.sock:/var/run/docker.sock:rw" \
 	--volume "`readlink -f .`:${container_home}/workspace" \
 	--env DISPLAY="${DISPLAY}" \
-	--name "cpp-development.${workspace_name}" \
+	--name ${container_name} \
 	--env HOST_USER_NAME=${host_user_name} \
     --env HOST_USER_ID=`id --user` \
-	${TAG}
+	${tag}
