@@ -8,4 +8,10 @@ useradd --uid ${HOST_USER_ID} ${user} --no-create-home
 find /home -group user | xargs chown ${user}:${user}
 ln -s /home/user /home/${user}
 
-sudo -H -u ${user} bash
+# ensure mimic has access to docker
+docker_group=$(stat --format='%G' /var/run/docker.sock)
+docker_group_id=$(stat --format='%g' /var/run/docker.sock)
+groupadd --gid ${docker_group_id} ${docker_group}
+usermod --groups ${docker_group}  ${user}
+
+sudo --set-home --user=${user} bash
