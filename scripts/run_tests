@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+image_tag="${1:-}"
+
+if [ "${image_tag}" == "" ]; then
+	printf 'Usage: ./run_tests IMAGE_TAG\n'
+	exit 1
+fi
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+project_dir="$( readlink -f "${script_dir}/.." )"
+test_dir="${project_dir}/tests"
+
+for test in "${test_dir}"/*; do
+  "${test}" "${image_tag}"
+done

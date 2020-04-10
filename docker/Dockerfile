@@ -8,9 +8,21 @@ ADD docker /docker
 
 RUN apt-get update && \
 	apt-get install --yes \
-		wget curl software-properties-common apt-transport-https docker git libasound2 sudo
-RUN apt-get install --yes \
-		tldr vim gedit clang-format g++
+		sudo software-properties-common \
+		gnupg-agent ca-certificates apt-transport-https \
+		wget curl git && \
+		\
+	apt-get install --yes \
+		tldr vim gedit clang-format g++ libasound2
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
+	add-apt-repository \
+		"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+		$(lsb_release -cs) \
+		stable" && \
+	apt-get update && \
+	apt-get install --yes \
+		docker-ce docker-ce-cli containerd.io
 
 RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
 	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
