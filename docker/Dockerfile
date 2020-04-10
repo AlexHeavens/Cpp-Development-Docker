@@ -10,9 +10,7 @@ RUN apt-get update && \
 	apt-get install --yes \
 		sudo software-properties-common \
 		gnupg-agent ca-certificates apt-transport-https \
-		wget curl git && \
-		\
-	apt-get install --yes \
+		wget curl git bash-completion \
 		tldr vim gedit clang-format g++ libasound2
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
