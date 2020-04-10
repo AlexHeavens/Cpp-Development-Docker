@@ -8,7 +8,7 @@ ADD docker /docker
 
 RUN apt-get update && \
 	apt-get install --yes \
-		sudo software-properties-common \
+		sudo man software-properties-common \
 		gnupg-agent ca-certificates apt-transport-https \
 		wget curl git bash-completion \
 		tldr vim gedit clang-format g++ libasound2
